@@ -33,6 +33,8 @@
 \newtheorem{lem}{Lemma}
 \newtheorem{cor}{Corollary}
 \newtheorem{algo}{Algorithm}
+\newtheorem{exmp}{Example}
+
 \newtheorem{clm}{Claim}
 \newtheorem{pse}{Pseudocode}
 
@@ -48,22 +50,285 @@
 
 \vspace{.25in}
 
+
+\chapter{Ordinary Differential Equations Review}
+Physics Informed Neural Networks are based around the concept of generalizing partial differential equations to capture a physical understanding of the physical properties that they try to \textbf{expensively} compute.  In or der to understand these concepts, we will begin by performing a comprehensive review, starting with ODE's, moving to a review on Vector Calculus, Systems of ODE's, and then finally learning about PDE's.  
+
+\section{Ordinary Differential Equation Fundamentals}
+What is a differential equation? An equation involving \textbf{functions} and its \textbf{derivatives}.  \\
+Simply put, ODE's involve a single variable, and PDE's involve multiple variables and the partial derivatives of those variables.\\
+
+Say we are evaluating a financial investment.  The rate of growth of an investment is proportional to the \textit{amount of the investment}. \\ 
+Say we have an equation $P'(t) = rP(t)$. \\ 
+Consider a mutual fund grows at a 10\% rate.  We can assume that the interest is compounded \textit{continuously}.  The rate of change is $\frac{1}{10}P(t)$ \\
+
+\begin{defn}
+    If the rate of change of a function $f$ is proportional to the function itself, then $f'=rf$
+\end{defn}
+
+Let's look at an example.  If we have a colony of rabits, we could say that they grow proportionally to its size.  
+\begin{exmp}
+\[
+P'(t) = rP(t)
+.\] 
+\end{exmp}
+This is a model, but realistically this reaches a certain point where it would level off, rabbits wouldn't actually infinitely grow (due to food resources or other factors).\\
+\\
+Let's look at another brief sample question, this time in the realm of chemistry.  \\
+A radioactive substance decays at a rate proportional to its size.  \\
+If there are 30 grams initially, and 20 grams after one year, what is the half-life?\\
+\begin{exmp}
+\[
+M'(t) = -kM(t)
+.\] 
+\end{exmp}\\
+
+We write negative $k$, because it shows that the rate of change is negative.  \\
+The key takeaway here is that the rate of change is proportional to its size. This is a clear example of \textit{exponential decay}. 
+
+Another physics example might include instead a proportional difference.  
+Let's say we have a cup of coffee.  This cup of coffee cools at a rate \textit{proportional} to the difference: "(temp. of coffee) - (ambient temp.)"\\
+\begin{align}
+    T'(t) &= k(72 - T(t))\\
+    T' &= -kT + k72
+\end{align}
+
+In this case, we know what the equation looks like.  We know what the solution is when the ambient temperature ($K=72)$, therefore, we have a \textbf{steady state} solution.  
+
+So \textbf{Exponential Decay} happens while we \textit{decay to a limiting value}.  Some examples of this could include:
+\begin{enumerate}
+    \item Earth's population
+    \item Velocity of a falling object with air resistance
+\end{enumerate}
+
+It is worth noting, Population growth won't directly hit a value and stop, it would fluctuate above and below to the \textbf{carrying capacity} or cap.
+
+This will factor into the Logistic Equation.
+\[
+P'(t) = r(1-\frac{P(t)}{M}) P(t)
+.\] \\
+Here,$(1-\frac{P(t)}{M})$ is the decay  $\rightarrow M$, and $P(t) \rightarrow$ Exponential Growth. This is our steady state that we referenced earlier. \\
+
+Slope Fields are created by graphing the solution and the given slope at several points.  Given a slope field, we will graph multiple versions of the function at different constant values.  This function has a given slope, by graphing the function at that given slope we establish a \textbf{isocline} or a point on the line or curve where $y'$ is a constant.\\
+Let's look at an ODE,$y'=2y+t$.\\
+
+ \[
+    y'=0 &\quad y=-\frac{1}{2}t + 0
+.\] \[
+    y'=1 &\quad y=-\frac{1}{2}t + \frac{1}{2}
+.\] \[
+    y'=2 &\quad y=-\frac{1}{2}t + 1
+.\] \[
+    y'=3 &\quad y=-\frac{1}{2}t + \frac{3}{2}
+.\] \[
+    y'=-1 &\quad y=-\frac{1}{2}t - \frac{1}{2}
+.\] \\
+
+Here, we can answer the problem at any given required solution.  Based on the infinite number of solution that we could determine an individual answer from one of the points we are interested in.\\
+What is very unique is the line where the function almost diverges, on our resulting slope field, the point in which the function swaps from one position to the next.  \\
+Say we are tasked with finding the solution for $y(0) = -\frac{1}{4}$.  That is fundamentally the \textit{simplest} solution, because it is the only function in which our solution is linear, while the other resulting functions are curves.  We will touch more on this later.\\
+\\
+There is a potential shortcut that works with certain types of differential equations.  \\
+\begin{defn}
+    An ODE is \textbf{autonomous} if $y' = f(y)$ for some function $f$.
+\end{defn}
+
+This essentially means that autonomous functions are those that do not include additional variables (constants).
+
+Let's evaluate now something known as \textbf{Euler's Method}.  Let's first look at a classic calculus problem.
+\[
+f(1) = 1 \quad f'(1) = \frac{1}{2}
+.\] 
+Depending on the function, if we approximate $f(1.5)$ using a tangent line at $f(x)$ at $x=1$, we can get varying degrees of error.\\
+Let's look at this from the eyes of a differential equation problem.  
+\[
+y'=y-t \quad y(1)=1
+.\] Can we approximate $y(1.5)$?\\
+Well, we have a whole library of solutions given this function.  Remember our slope fields.  Imagine we are creating a path along a windy road.  Simply put, we could guide something down this path by just approximating many straight lines until we reach the destination.  \\
+\\
+This is fundamentally how \textbf{Euler's Method} works. Let us solve the above equation based on this method.\\
+\\
+First we need to determine the step size we will use, think of this as our resolution.  Our $t$ value is 1.  So we begin by starting at $(t_0, y_0)$ or $(1, 1)$.  \\
+\[
+y_0' &= y_0-t_0
+\] 
+\[
+y_0' &= 1-1
+\] 
+\[
+y_0' &= 0
+\] 
+Now we would continue, by increasing our $t_0$ component by the step size. We would then repeat this process.
+\[
+y_1' &= 1-1.1
+\] 
+\[
+y_1' &= -0.1
+\] 
+Now this gets more complicated given the continuation of this equation.  For instance, for the next step, we now also need to incorporate the $\Delta y'$ that we experienced before.  
+\[
+    (t_2, y_2) = (1.2, 1+(-0.1)(0.1))
+.\] 
+This is due to the fact that $y' = \frac{\Delta y}{h}$ or $\Delta y = y'h$.  It can be evaluated by the position and identifying the change on the triangle.  In this case, it is quite simple because our function is linear, but as you can see, this would get increasingly more complicated as we would evaluate a non-linear function. \\
+What we have illustrated above, \[
+    (-0.1)(0.1) = y' \cdot h = \Delta y
+.\] 
+Our next point begins by first computing the slope.  
+\[
+y_2' = y_2-t_2 = 0.99-1.2 = -0.2
+.\] 
+Our next point is therefore $(t_3, y_3)$
+\[
+    (t_3, y_3) = (1.3, 0.99+(-0.21)(0.1))
+.\] 
+\[
+    (t_3, y_3) = (1.3, 0.969)
+.\] 
+Computing the slope again 
+\[
+y_3'=0.969-1.3 = -0.331
+.\] 
+Our next point:
+\[
+    (t_4, y_3) = (1.4, 0.969 + (-0.331)(0.1)) = (1.4, -0.4641)
+.\] 
+Now we know our real solution is a smooth value, therefore, our computation here has some inherent error just based on the \textit{step} size that we are calculating with.  
+
+Let's solve for the last point, first computing the slope:
+\[
+y_4' = y_4-t_4 = 0.9359 - 1.4 = -0.4641
+.\] 
+And finally the last point:
+\[
+    (t_5, y_5) = (1.5, 0.9359 + (-0.9641)(.1)) = (1.5, 0.88949)
+.\] 
+So our solution here is an approximation of $y(1.5) \approx 0.88949$.  What is the real value here? Well we don't currently know how to compute that, but, we can cheat just to see how close we were to the actual answer.  The actual answer is $y(1.5) = e^{-0.5} + 2.5 \approx 0.85128$.  So only off by $\approx 0.04$, which is quite good for only performing 5 steps! Let's summarize this into a formal definition.  
+\begin{defn}
+    Given $y' = f(t, y) and y(t_0) = y_0$ with a stepsize $h$:
+    \[
+        (t_1, y_1) = (t_0 + h, y_0+f(t_0, y_0) \cdot h)
+    .\] 
+    \[
+        (t_2, y_2) = (t_1 + h, y_1+f(t_1, y_1) \cdot h)
+    .\] 
+    \[
+    \vdots
+    .\] 
+    \[
+        (t_{k+1}, y_{k+1})=(t_k + h, y_k + f(t_k, y_k)\cdot h)
+    .\] 
+\end{defn}
+This is the essence of a field known as \textbf{numerical analysis}, which answers the question, well, if we can't solve something, why don't we just compute it directly?
+
+\subsection{First-order ODE's}
+The order of ODE's are set by the highest derivative that appears.\\
+
+$y' = 2y + t$ is a 1st Order ODE\\
+
+$y'' = 2y + t$ is a 2nd Order ODE\\
+
+We could also have mixed functions\\
+
+$y''' - 2t^5 y'' = \sin y$ is a 3rd Order ODE\\
+
+Currently, we are only focused about solving first order ODE's. We will go into second order ODE's in the next subsection.
+Let's first look at a simple example problem, an exponential problem.  Find all solutions to $y' = ky$.  \\
+The first thing we will do here is rewrite the equation into a different form.
+\[
+\frac{dy}{dt} = ky
+.\] After this we are going to do something that is \textit{unheard of} within calculus, we are going to treat $\frac{dy}{dt}$ as a true fraction and separate them!\\
+\[
+dy=k y dt
+.\] \\
+Now we will perform a separation of Variables, the goal here is to separate the variables in a form shown below:
+\[
+\frac{dy}{y} = k \cdot dt
+.\] 
+Now we integrate both sides
+\[
+\int\frac{dy}{y} = k \int dt
+.\] 
+This leaves us with 
+\[
+\ln |y| = kt+C
+.\] 
+\[
+    e^{\ln |y|} = e^{kt}e^{C} = Ce^{kt}
+.\] 
+We can simplify $e^{\ln |y|}$ to just  $y$, and therefore we get the solution $y(t) = Ce^{kt}$
+\\
+This is very simple to evaluate if it checks, just ensure that $y' = ky$ and in this case it does. \\
+\\
+What is $C$? \\
+Here, $C$ is just our \textbf{Initial Condition}.
+
+\subsection{Second-order ODE's}
+\subsection{Separation of Variables}
+\subsection{Initial Value Problems}
+
+\section{Vector Calculus Review}
+\subsection{Gradients}
+\subsection{Divergence}
+\subsection{Curl}
+\subsection{Line, Surface, Volume Integrals} 
+\subsection{Key Theorems (Green's, Strokes', Divergence}
+
+\section{Systems of Ordinary Differential Equations}
+\subsection{Matrix Methods}
+\subsection{Complex Eigenvalues}
+\subsection{Phase Plane Analysis}
+
 \chapter{Partial Differential Equations}
+$\pdv{Q}{t}$
 What is a Physics-Informed neural network? These are also known as \textbf{Theory-Trained Neural Networks}, our goal is to \textit{learn} the physical laws that govern a dataset, often laws that are typically expressed utilizing \textbf{Partial Differental Equations}.  
 In essence, Partial differential equations are used to construct models of the most basic theories underlying physics and engineering.  
 
 
-
-\section{sample}
-test
-$\pdv{Q}{t}$
-
-\subsection{sample}
-test
-
 \chapter{Physic Informed Neural Networks, Introduction}
-test
-
+Now we will move to implimentation.  
+\subsection{Potential Computationally Solvable PDE's}
+Heat or Diffusion Equation
+\[
+\frac{\partial u}{\partial t} = \alpha \frac{\partial^2 u}{\partial x^2}
+.\] 
+with typical initial and boundary conditions:
+\[
+u(x,0) = f(x) \quad \text{(initial condition)}
+u(0,t) = u(L,t) = 0 \quad \text{(boundary conditions)}
+.\] 
+\\
+Wave Equations\\
+\[
+\frac{\partial^2 u}{\partial t^2} = c^2 \frac{\partial^2 u}{\partial x^2}
+.\] \\
+with typical initial and boundary conditions:\\
+\[
+u(x,0) = f(x) \quad \text{(initial position)}
+\frac{\partial u}{\partial t}(x,0) = g(x) \quad \text{(initial velocity)}
+u(0,t) = u(L,t) = 0 \quad \text{(boundary conditions)}
+.\] 
+\\
+Advection Equation\\
+\[
+\frac{\partial u}{\partial t} + c\frac{\partial u}{\partial x} = 0
+.\] 
+with typical initial condition\\
+\[
+u(x,0) = f(x)
+.\]\\ 
+And often periodic boundary conditions\\
+\[
+u(0,t) = u(L,t)
+.\] \\
+\\
+Laplace Equation\\
+\[
+\nabla^2 u = \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} = 0
+.\] \\
+Typically solved with Dirichlet boundary conditions\\
+\[
+u(x,y) = f(x,y) \quad \text{on } \partial\Omega
+.\] 
 \end{document}
 
 

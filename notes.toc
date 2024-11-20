@@ -1,0 +1,4 @@
+\contentsline {chapter}{\numberline {1}Partial Differential Equations}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}sample}{2}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}sample}{2}{subsection.1.1.1}%
+\contentsline {chapter}{\numberline {2}Physic Informed Neural Networks, Introduction}{3}{chapter.2}%

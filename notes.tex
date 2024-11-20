@@ -1,0 +1,69 @@
+\documentclass[10pt, oneside]{report} 
+\usepackage{amsmath, amsthm, amssymb, calrsfs, wasysym, verbatim, bbm, color, graphics, geometry}
+
+\usepackage{physics}
+
+\usepackage{trimclip}
+\newcommand{\halfapprox}{\mathchoice{%
+\clipbox{0em 0em 0em 0.22em}{$\displaystyle\approx$}}{%
+\clipbox{0em 0em 0em 0.22em}{$\textstyle\approx$}}{%
+\clipbox{0em 0em 0em 0.18em}{$\scriptstyle\approx$}}{%
+\clipbox{0em 0em 0em 0.18em}{$\scriptscriptstyle\approx$}}}
+
+\usepackage{titlesec}
+\setcounter{secnumdepth}{3}
+
+\usepackage{hyperref}
+
+\geometry{tmargin=.75in, bmargin=.75in, lmargin=.75in, rmargin = .75in}  
+
+\newcommand{\O}{\mathbb{O}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Cdot}{\boldsymbol{\cdot}}
+
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{conv}{Convention}
+\newtheorem{rem}{Remark}
+\newtheorem{lem}{Lemma}
+\newtheorem{cor}{Corollary}
+\newtheorem{algo}{Algorithm}
+\newtheorem{clm}{Claim}
+\newtheorem{pse}{Pseudocode}
+
+
+\title{Physics Informed Neural Networks}
+\author{Nicholas Leland}
+\date{November 2024}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\vspace{.25in}
+
+\chapter{Partial Differential Equations}
+What is a Physics-Informed neural network? These are also known as \textbf{Theory-Trained Neural Networks}, our goal is to \textit{learn} the physical laws that govern a dataset, often laws that are typically expressed utilizing \textbf{Partial Differental Equations}.  
+In essence, Partial differential equations are used to construct models of the most basic theories underlying physics and engineering.  
+
+
+
+\section{sample}
+test
+$\pdv{Q}{t}$
+
+\subsection{sample}
+test
+
+\chapter{Physic Informed Neural Networks, Introduction}
+test
+
+\end{document}
+
+
